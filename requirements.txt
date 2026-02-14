@@ -3,3 +3,7 @@ openai
 python-dotenv
 pdfplumber
 tiktoken
+easyocr
+pillow
+numpy
+pymupdf
