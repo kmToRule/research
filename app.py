@@ -12,6 +12,13 @@ if uploaded_file:
     with st.spinner("Extracting text from PDF..."):
         text = extract_text_from_pdf(uploaded_file)
 
+    if not text or len(text) < 50:
+        st.error("❌ OCR failed to extract text. Try another PDF.")
+        st.stop()
+
+    st.success(f"Text extracted. Length: {len(text)} characters")
+
+
     st.success(f"Text extracted. Length: {len(text)} characters")
 
     if st.button("Run Research Tool"):

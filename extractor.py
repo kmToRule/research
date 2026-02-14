@@ -1,37 +1,29 @@
-from pdf2image import convert_from_path
 import pytesseract
-from PIL import Image
-import os
+from pdf2image import convert_from_bytes
 import tempfile
+import os
 
 
-def extract_text_from_pdf(pdf_file):
-    """
-    Extract text from scanned/image-based PDF using Tesseract OCR.
-    Best quality when running locally with Tesseract installed.
-    """
-
-    text = ""
-
+def extract_text_from_pdf(uploaded_file):
     try:
-        # Create temporary file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-            tmp.write(pdf_file.read())
-            tmp_path = tmp.name
+        # Convert PDF → images
+        images = convert_from_bytes(uploaded_file.read(), dpi=300)
 
-        # Convert PDF pages to images
-        images = convert_from_path(tmp_path, dpi=300)
+        if not images:
+            print("PDF to image conversion failed")
+            return ""
 
-        # OCR each page
-        for img in images:
-            page_text = pytesseract.image_to_string(img, lang="eng")
-            text += page_text + "\n"
+        full_text = ""
 
-        # Cleanup temp file
-        os.remove(tmp_path)
+        for i, img in enumerate(images):
+            text = pytesseract.image_to_string(img, lang="eng")
+
+            if text:
+                full_text += text + "\n"
+
+        print("Extracted length:", len(full_text))
+        return full_text.strip()
 
     except Exception as e:
-        print("OCR ERROR:", e)
+        print("OCR ERROR:", str(e))
         return ""
-
-    return text.strip()
