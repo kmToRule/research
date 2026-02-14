@@ -1,9 +1,7 @@
 streamlit
 openai
-python-dotenv
-pdfplumber
-tiktoken
-easyocr
+PyPDF2
+pdf2image
 pillow
-numpy
-pymupdf
+pytesseract
+python-dotenv

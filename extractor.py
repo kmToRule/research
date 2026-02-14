@@ -1,32 +1,15 @@
-import fitz  # PyMuPDF
-import easyocr
-import numpy as np
-from PIL import Image
-import io
+from pdf2image import convert_from_bytes
+import pytesseract
 
-# Initialize OCR reader once (fast reuse)
-reader = easyocr.Reader(['en'], gpu=False)
-
-
-def extract_text_from_pdf(file):
-    text = ""
-
-    # ---------- Convert PDF pages to images ----------
+def extract_text_from_pdf(uploaded_file):
     try:
-        file.seek(0)
-        doc = fitz.open(stream=file.read(), filetype="pdf")
+        images = convert_from_bytes(uploaded_file.read(), dpi=200)
 
-        for page in doc:
-            pix = page.get_pixmap(dpi=200)
-            img_bytes = pix.tobytes("png")
-            img = Image.open(io.BytesIO(img_bytes))
-            img_np = np.array(img)
+        text = ""
+        for img in images:
+            text += pytesseract.image_to_string(img)
 
-            # OCR
-            result = reader.readtext(img_np, detail=0, paragraph=True)
-            text += " ".join(result) + "\n"
+        return text.strip()
 
     except Exception as e:
-        print("OCR FAILED:", e)
-
-    return text.strip()
+        return ""
