@@ -2,5 +2,7 @@ streamlit
 openai
 pytesseract
 pdf2image
-pillow
+Pillow
 python-dotenv
+numpy
+opencv-python-headless

@@ -1,4 +1,5 @@
 import pytesseract
+pytesseract.pytesseract.tesseract_cmd = "/usr/bin/tesseract"
 from pdf2image import convert_from_bytes
 import tempfile
 import os

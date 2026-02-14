@@ -18,9 +18,6 @@ if uploaded_file:
 
     st.success(f"Text extracted. Length: {len(text)} characters")
 
-
-    st.success(f"Text extracted. Length: {len(text)} characters")
-
     if st.button("Run Research Tool"):
         with st.spinner("Analyzing transcript..."):
             # --- TEMP small test ---

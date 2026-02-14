@@ -164,43 +164,38 @@ def openai_pipeline(full_text):
         PROMPT = """
 You are a professional equity research analyst.
 
-TASK:
-Extract ONLY investor-relevant business insights from the transcript.
+ONLY extract information EXPLICITLY present in the transcript.
+DO NOT assume, infer, or hallucinate anything.
 
-STRICTLY IGNORE:
-- Greetings, thanks, moderator speech
-- "Thank you for the opportunity"
-- "Listen-only mode"
-- Disclaimers / forward-looking statements
-- Operator / Q&A management lines
-- Any generic or non-business sentences
+If a section is missing, return: "Not mentioned in transcript".
 
-ONLY EXTRACT:
-- Business growth, demand, margins, revenue drivers
-- Risks, working capital, cost pressures
-- Forward guidance (revenue/margin/capex)
-- Capacity utilization / order visibility
-- Strategic initiatives / expansion / acquisition
+Ignore:
+- Moderator speech
+- Greetings / thanks
+- Q&A noise
+- Disclaimers
+- Irrelevant discussion
 
 Return STRICT JSON:
 
 {
- "tone": "Optimistic / Neutral / Cautious",
- "positives": ["Short business-focused insights only"],
- "concerns": ["Real business risks only"],
+ "tone": "optimistic / cautious / neutral / pessimistic",
+ "positives": [],
+ "concerns": [],
  "guidance_revenue": "",
  "guidance_margin": "",
  "guidance_capex": "",
  "capacity_trend": "",
- "initiatives": ["Real strategic actions only"]
+ "initiatives": []
 }
 
-RULES:
-- DO NOT include greetings, moderator, or filler text
-- DO NOT include generic sentences
-- Keep outputs investor-focused and meaningful
-- If information not present → return "Not mentioned in transcript"
+Rules:
+- Keep points SHORT (1 sentence max)
+- Investor-focused only
+- No long text
+- No explanations
 """
+
 
 
 
@@ -236,9 +231,6 @@ RULES:
     rev, mar, cap, capu = [], [], [], []
 
     # ---- Remove OCR / greeting noise ----
-    pos = filter_noise(pos)
-    con = filter_noise(con)
-    init = filter_noise(init)
 
     for ins in insights:
         t = ins.get("tone", "Neutral")
