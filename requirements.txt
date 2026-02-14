@@ -1,7 +1,6 @@
 streamlit
 openai
-PyPDF2
+pytesseract
 pdf2image
 pillow
-pytesseract
 python-dotenv
