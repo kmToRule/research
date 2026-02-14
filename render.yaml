@@ -1,9 +1,21 @@
 services:
   - type: web
-    name: earnings-ai
-    runtime: python
-    buildCommand: |
-      apt-get update
-      apt-get install -y tesseract-ocr poppler-utils
-      pip install -r requirements.txt
+    name: research
+    env: python
+    buildCommand: pip install -r requirements.txt
     startCommand: streamlit run app.py --server.port=$PORT --server.address=0.0.0.0
+    plan: free
+
+    buildFilter:
+      paths:
+        - "**/*"
+
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: MODEL_NAME
+        value: gpt-4o-mini
+
+    aptPackages:
+      - tesseract-ocr
+      - poppler-utils
